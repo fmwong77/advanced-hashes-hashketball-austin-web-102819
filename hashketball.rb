@@ -35,7 +35,7 @@ def game_hash()
                             :number => 1,
                             :shoe => 19,
                             :points => 26,
-                            :rebounds => 12,
+                            :rebounds => 11,
                             :assists => 6,
                             :steals => 3,
                             :blocks => 8,
@@ -62,13 +62,13 @@ def game_hash()
                     :steals => 2,
                     :blocks => 7,
                     :slam_dunks => 2},
-                   {:player_name => "Bismak Biyombo",
+                   {:player_name => "Bismack Biyombo",
                     :number => 0,
                     :shoe => 16,
                     :points => 12,
                     :rebounds => 4,
                     :assists => 7,
-                    :steals => 7,
+                    :steals => 22,
                     :blocks => 15,
                     :slam_dunks => 10},
                    {:player_name => "DeSagna Diop",
@@ -89,13 +89,13 @@ def game_hash()
                     :steals => 1,
                     :blocks => 1,
                     :slam_dunks => 0},
-                   {:player_name => "Brendan Haywood",
+                   {:player_name => "Kemba Walker",
                     :number => 33,
                     :shoe => 15,
                     :points => 6,
                     :rebounds => 12,
                     :assists => 12,
-                    :steals => 22,
+                    :steals => 7,
                     :blocks => 5,
                     :slam_dunks => 12}]
     }
@@ -137,6 +137,85 @@ def num_points_scored(player_name)
   end
 end
 
+def shoe_size(player_name)
+  game_hash = game_hash()
+  game_hash.each do |place, team| 
+    team[:players].each do |player_stats|
+      if player_stats[:player_name] == player_name
+        return player_stats[:shoe]
+      end
+    end
+  end
+end
+
+def team_colors(team_name)
+  array = []
+  game_hash = game_hash()
+  game_hash.each do |place, team| 
+    next if team[:team_name] != team_name    
+    array = team[:colors]   
+    # another way of writing using collect
+    # return team[:colors].collect do |color| color 
+  end
+  array
+end
+
+def team_names()
+  array = []
+  game_hash = game_hash()
+  game_hash.each do |place, team| 
+    array.push(team[:team_name]) 
+  end
+  array
+end
+
+def player_numbers(team_name)
+  array = []
+  game_hash = game_hash()
+  game_hash.each do |place, team|     
+    next if team[:team_name] != team_name    
+    team[:players].each do |player|
+      array.push(player[:number])
+    end  
+  end
+  array
+end
+
+def player_stats(player_name)
+  player_hash = {}
+  game_hash = game_hash()
+  game_hash.each do |place, team| 
+        
+       
+    team[:players].each do |player|
+      next if player[:player_name] != player_name 
+      player_hash = player
+      player_hash.delete(:player_name)
+    end  
+  end
+  player_hash
+end
+
+def big_shoe_rebounds()
+  hash = {}
+  game_hash = game_hash()
+  game_hash.each do |place, team| 
+    team[:players].each do |players|
+    # puts players[:player_name]
+      hash[players[:player_name]] = players[:shoe]
+    end      
+  end
+
+  player_name = ""
+  player_name = hash.key(hash.values.max)
+  game_hash.each do |place, team| 
+    team[:players].each do |player|
+      next if player[:player_name] != player_name
+      return player[:rebounds]
+    end
+  end
+end
+
 def most_points_scored()
   hash = {}
   game_hash = game_hash()
@@ -153,20 +232,57 @@ def most_points_scored()
 end
 
 def winning_team()
-  hash = {}
-  points = 0
+  point_hash = {}
+  
+  game_hash = game_hash()
+  game_hash.each do |place, team|      
+    total = 0
+    team[:players].each do |stats|            
+       total += stats[:points]           
+    end  
+    point_hash[team[:team_name]] = total
+  end  
+  
+  point_hash.key(point_hash.values.max)
+end
+
+def player_with_longest_name()
+  player_hash = {}
+  total = 0
+  game_hash = game_hash()
+  game_hash.each do |place, team|                
+    team[:players].each do |stats|            
+       player_hash[stats[:player_name]] = stats[:player_name].length     
+    end  
+    
+  end  
+  
+  player_hash.key(player_hash.values.max)
+end
+
+def most_steals()
+hash = {}
   game_hash = game_hash()
   game_hash.each do |place, team| 
     team.each do |key, value|
       if key == :players          
         value.each do |data|  
-        points += data[:points]                               
+          hash[data[:player_name]]  = data[:steals]
         end
-         hash[team[:team_name]]  =   points
       end      
     end
   end
   return hash.max_by{|k,v| v}[0]
+end
+
+def long_name_steals_a_ton?
+  most_steals = most_steals()
+  player_with_longest_name = player_with_longest_name()
+
+
+  if player_with_longest_name == most_steals
+    return true  
+  end  
 end
 
 
