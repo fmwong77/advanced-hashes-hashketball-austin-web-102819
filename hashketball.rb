@@ -137,9 +137,8 @@ def num_points_scored(player_name)
   end
 end
 
-def winning_team()
+def most_points_scored()
   hash = {}
-  points = 0
   game_hash = game_hash()
   game_hash.each do |place, team| 
     team.each do |key, value|
