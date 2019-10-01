@@ -137,6 +137,40 @@ def num_points_scored(player_name)
   end
 end
 
+def winning_team()
+  hash = {}
+  points = 0
+  game_hash = game_hash()
+  game_hash.each do |place, team| 
+    team.each do |key, value|
+      if key == :players          
+        value.each do |data|  
+        points += data[:points]                               
+        end
+         hash[team[:team_name]]  =   points
+      end      
+    end
+  end
+  return hash.max_by{|k,v| v}[0]
+end
+
+def winning_team()
+  hash = {}
+  points = 0
+  game_hash = game_hash()
+  game_hash.each do |place, team| 
+    team.each do |key, value|
+      if key == :players          
+        value.each do |data|  
+        points += data[:points]                               
+        end
+         hash[team[:team_name]]  =   points
+      end      
+    end
+  end
+  return hash.max_by{|k,v| v}[0]
+end
+
 
 
 
